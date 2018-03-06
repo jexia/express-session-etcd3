@@ -73,7 +73,12 @@
     "collectCoverage": true,
     "mapCoverage": true
   },
+  "peerDependencies": {
+    "express-session": "^1.15.6",
+    "etcd3": "^0.2.9"
+  },
   "devDependencies": {
+    "@types/express-session": "^1.15.8",
     "@types/jest": "^22.0.0",
     "@types/node": "^9.3.0",
     "colors": "^1.1.2",
@@ -81,6 +86,7 @@
     "coveralls": "^3.0.0",
     "cross-env": "^5.0.1",
     "cz-conventional-changelog": "^2.0.0",
+    "etcd3": "^0.2.9",
     "express-session": "^1.15.6",
     "husky": "^0.14.0",
     "jest": "^22.0.2",
