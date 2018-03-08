@@ -35,13 +35,7 @@ Our [test cases](https://github.com/willgm/express-session-etcd3/tree/master/tes
 
 ## Contributing
 
-Running tests for this module requires running an etcd3 server locally. The tests try to use the default port initially, and you can configure this by setting the ETCD_ADDR environment variable, like export ETCD_ADDR=localhost:12345.
-
-There is a Docker image ready to use, which can be easily build with:
-
-```sh
-npm run docker
-```
+You can find all the steps at the [Contributing Guide](https://github.com/willgm/express-session-etcd3/blob/master/CONTRIBUTING.md).
 
 ## Credits
 
