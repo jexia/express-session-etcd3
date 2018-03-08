@@ -5,8 +5,8 @@
   "keywords": [
     "etcd",
     "etcd3",
-    "session",
     "express",
+    "session",
     "adapter"
   ],
   "main": "dist/express-session-etcd3.js",
