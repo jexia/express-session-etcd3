@@ -1,7 +1,7 @@
 import * as session from 'express-session'
 import { Etcd3, IOptions } from 'etcd3'
 
-const oneDay = 86400
+export const oneDay = 86400
 
 export interface Etcd3StoreOptions extends IOptions {
   prefix?: string
@@ -25,35 +25,26 @@ export default class Etcd3Store extends session.Store {
       this.client
         .get(this.key(sid))
         .json()
-        .then((val: any) => callback(null, val))
-        .catch(err => callback(err, null as any))
+        .then((val: any) => callback(null, val), err => callback(err, null as any))
     } catch (err) {
       callback(err, null as any)
     }
   }
 
-  set = (sid: string, session: Express.Session, callback: (err: any) => void): void => {
+  set = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
     try {
-      this.client
+      const lease = this.client
         .lease(this.getTTL(session, sid))
         .put(this.key(sid))
         .value(JSON.stringify(session))
-        .catch(callback)
+        .then(() => callback(null), err => callback(err))
     } catch (err) {
       callback(err)
     }
   }
 
-  touch = (sid: string, session: Express.Session, callback: (err: any) => void): void => {
-    try {
-      this.client
-        .lease(this.getTTL(session, sid))
-        .put(this.key(sid))
-        .touch()
-        .catch(callback)
-    } catch (err) {
-      callback(err)
-    }
+  touch = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
+    this.set(sid, session, callback)
   }
 
   all = (callback: (err: any, obj: { [sid: string]: Express.SessionData }) => void): void => {
@@ -62,8 +53,8 @@ export default class Etcd3Store extends session.Store {
         .getAll()
         .prefix(this.key())
         .json()
-        .then((val: any) => callback(null, val))
-        .catch(err => callback(err, null as any))
+        .then(json => Object.values(json))
+        .then((val: any) => callback(null, val), err => callback(err, null as any))
     } catch (err) {
       callback(err, null as any)
     }
@@ -75,8 +66,7 @@ export default class Etcd3Store extends session.Store {
         .getAll()
         .prefix(this.key())
         .count()
-        .then(val => callback(null, val))
-        .catch(err => callback(err, null as any))
+        .then(val => callback(null, val), err => callback(err, null as any))
     } catch (err) {
       callback(err, null as any)
     }
@@ -87,7 +77,7 @@ export default class Etcd3Store extends session.Store {
       this.client
         .delete()
         .prefix(this.key(sid))
-        .catch(callback)
+        .then(() => callback(null), err => callback(err))
     } catch (err) {
       callback(err)
     }
@@ -98,7 +88,7 @@ export default class Etcd3Store extends session.Store {
       this.client
         .delete()
         .prefix(this.key())
-        .catch(callback)
+        .then(() => callback(null), err => callback(err))
     } catch (err) {
       callback(err)
     }
@@ -113,7 +103,7 @@ export default class Etcd3Store extends session.Store {
     if (typeof storeTtl === 'number') return storeTtl
     if (typeof storeTtl === 'string') return Number(storeTtl)
     if (typeof storeTtl === 'function') return storeTtl(this, sess, sid)
-    if (storeTtl) throw new TypeError('`storeTtl` must be a number or function.')
+    if (storeTtl) throw new TypeError('`store.ttl` must be a number or function.')
 
     const maxAge = sess.cookie.maxAge
     return typeof maxAge === 'number' ? Math.floor(maxAge / 1000) : oneDay
