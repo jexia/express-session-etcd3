@@ -74,7 +74,7 @@ export default class Etcd3Store extends session.Store {
    */
   set = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
     try {
-      const lease = this.client
+      this.client
         .lease(this.getTTL(session, sid))
         .put(this.key(sid))
         .value(JSON.stringify(session))
