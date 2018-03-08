@@ -1,5 +1,8 @@
 # express-session-etcd3
 
+[![Build Status](https://travis-ci.org/willgm/express-session-etcd3.svg?branch=master)](https://travis-ci.org/willgm/express-session-etcd3)
+[![Coverage Status](https://coveralls.io/repos/github/willgm/express-session-etcd3/badge.svg?branch=master)](https://coveralls.io/github/willgm/express-session-etcd3?branch=master)
+
 An ETCD v3 store adapter for [Express session](https://github.com/expressjs/session) using [etcd3](https://github.com/mixer/etcd3) client.
 
 ## Setup
