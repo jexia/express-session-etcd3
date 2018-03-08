@@ -18,7 +18,7 @@
   "author": "William Grasel <d.ru.fo.s+github@gmail.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/willgm/express-session-etcd3.git"
   },
   "license": "MIT",
   "engines": {
@@ -36,10 +36,11 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
-    "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
     "docker": "docker build -t etcd . && docker run -d -p 2379:2379 -p 2380:2380 etcd",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "prepush": "npm run test:prod && npm run build",
+    "commitmsg": "validate-commit-msg"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
