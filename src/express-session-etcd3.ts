@@ -1,4 +1,4 @@
-import * as session from 'express-session'
+import { Store } from 'express-session'
 import { Etcd3, IOptions } from 'etcd3'
 
 /**
@@ -40,7 +40,7 @@ export const defaultOptions: Etcd3StoreOptions = Object.freeze({
  * }));
  * ```
  */
-export default class Etcd3Store extends session.Store {
+export default class Etcd3Store extends Store {
   constructor(
     private config: Etcd3StoreOptions = defaultOptions,
     private client = new Etcd3(config)
