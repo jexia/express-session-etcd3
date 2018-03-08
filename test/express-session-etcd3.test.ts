@@ -21,7 +21,7 @@ describe('Etcd3Store test suit', () => {
 
   afterEach(() => tearDownTestClient(client))
 
-  it('should work an personal config', () => {
+  it('should work with a personal config', () => {
     const subject = new Etcd3Store({ hosts: 'myhost' }, {} as any)
     expect(subject['key']()).toBeTruthy()
   })
