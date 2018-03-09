@@ -42,14 +42,14 @@ export const defaultOptions: Etcd3StoreOptions = Object.freeze({
  * ```
  */
 export default class Etcd3Store extends Store {
-  private debug = debug('express-store:etcd3')
+  private debug = debug('express-session:etcd3')
 
   constructor(
     private config: Etcd3StoreOptions = defaultOptions,
     private client = new Etcd3(config)
   ) {
     super(config)
-    this.debug('init config: %s', config)
+    this.debug('init config: %O', config)
   }
 
   /**
@@ -82,7 +82,7 @@ export default class Etcd3Store extends Store {
    */
   set = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
     const ttl = this.getTTL(session, sid)
-    this.debug('SET "%s" %s ttl:%s', sid, session, ttl)
+    this.debug('SET "%s" ttl:%s %O', sid, session, ttl)
     try {
       this.client
         .lease(ttl)
@@ -104,7 +104,7 @@ export default class Etcd3Store extends Store {
    * potentially resetting the idle timer.
    */
   touch = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
-    this.debug('TOUCH "%s" %s', sid, session)
+    this.debug('TOUCH "%s" %O', sid, session)
     this.set(sid, session, callback)
   }
 
@@ -207,7 +207,7 @@ export default class Etcd3Store extends Store {
    * Logging callback result
    */
   private callbackWithLog(cb: Function, err: any = null, value: any = null) {
-    const log = err ? ['ERR %s', err] : value ? ['DONE, data: %s', value] : ['DONE']
+    const log = err ? ['ERR %O', err] : value ? ['DONE, data: %O', value] : ['DONE']
     this.debug(log.shift(), ...log)
     cb(err, value)
   }
