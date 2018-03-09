@@ -1,5 +1,6 @@
 import { Store } from 'express-session'
 import { Etcd3, IOptions } from 'etcd3'
+import debug from 'debug'
 
 /**
  * One day in seconds.
@@ -41,11 +42,14 @@ export const defaultOptions: Etcd3StoreOptions = Object.freeze({
  * ```
  */
 export default class Etcd3Store extends Store {
+  private debug = debug('express-store:etcd3')
+
   constructor(
     private config: Etcd3StoreOptions = defaultOptions,
     private client = new Etcd3(config)
   ) {
     super(config)
+    this.debug('init config: %s', config)
   }
 
   /**
@@ -57,13 +61,17 @@ export default class Etcd3Store extends Store {
    * case is made when `error.code === 'ENOENT'` to act like `callback(null, null)`.
    */
   get = (sid: string, callback: (err: any, session: Express.SessionData) => void): void => {
+    this.debug('GET "%s"', sid)
     try {
       this.client
         .get(this.key(sid))
         .json()
-        .then((val: any) => callback(null, val), err => callback(err, null as any))
+        .then(
+          val => this.callbackWithLog(callback, null, val),
+          err => this.callbackWithLog(callback, err)
+        )
     } catch (err) {
-      callback(err, null as any)
+      this.callbackWithLog(callback, err)
     }
   }
 
@@ -73,12 +81,14 @@ export default class Etcd3Store extends Store {
    * called as `callback(error)` once the session has been set in the store.
    */
   set = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
+    const ttl = this.getTTL(session, sid)
+    this.debug('SET "%s" %s ttl:%s', sid, session, ttl)
     try {
       this.client
-        .lease(this.getTTL(session, sid))
+        .lease(ttl)
         .put(this.key(sid))
         .value(JSON.stringify(session))
-        .then(() => callback(null), err => callback(err))
+        .then(() => this.callbackWithLog(callback), err => this.callbackWithLog(callback, err))
     } catch (err) {
       callback(err)
     }
@@ -94,6 +104,7 @@ export default class Etcd3Store extends Store {
    * potentially resetting the idle timer.
    */
   touch = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
+    this.debug('TOUCH "%s" %s', sid, session)
     this.set(sid, session, callback)
   }
 
@@ -102,15 +113,19 @@ export default class Etcd3Store extends Store {
    * `callback` should be called as `callback(error, sessions)`.
    */
   all = (callback: (err: any, obj: { [sid: string]: Express.SessionData }) => void): void => {
+    this.debug('ALL')
     try {
       this.client
         .getAll()
         .prefix(this.key())
         .json()
         .then(json => Object.values(json))
-        .then((val: any) => callback(null, val), err => callback(err, null as any))
+        .then(
+          val => this.callbackWithLog(callback, null, val),
+          err => this.callbackWithLog(callback, err)
+        )
     } catch (err) {
-      callback(err, null as any)
+      this.callbackWithLog(callback, err)
     }
   }
 
@@ -119,14 +134,18 @@ export default class Etcd3Store extends Store {
    * The `callback` should be called as `callback(error, len)`.
    */
   length = (callback: (err: any, length: number) => void): void => {
+    this.debug('LENGTH')
     try {
       this.client
         .getAll()
         .prefix(this.key())
         .count()
-        .then(val => callback(null, val), err => callback(err, null as any))
+        .then(
+          val => this.callbackWithLog(callback, null, val),
+          err => this.callbackWithLog(callback, err)
+        )
     } catch (err) {
-      callback(err, null as any)
+      this.callbackWithLog(callback, err)
     }
   }
 
@@ -136,11 +155,12 @@ export default class Etcd3Store extends Store {
    * once the session is destroyed.
    */
   destroy = (sid: string, callback: (err: any) => void): void => {
+    this.debug('DESTROY')
     try {
       this.client
         .delete()
         .prefix(this.key(sid))
-        .then(() => callback(null), err => callback(err))
+        .then(() => this.callbackWithLog(callback), err => this.callbackWithLog(callback, err))
     } catch (err) {
       callback(err)
     }
@@ -151,13 +171,14 @@ export default class Etcd3Store extends Store {
    * should be called as `callback(error)` once the store is cleared.
    */
   clear = (callback: (err: any) => void): void => {
+    this.debug('CLEAR')
     try {
       this.client
         .delete()
         .prefix(this.key())
-        .then(() => callback(null), err => callback(err))
+        .then(() => this.callbackWithLog(callback), err => this.callbackWithLog(callback, err))
     } catch (err) {
-      callback(err)
+      this.callbackWithLog(callback, err)
     }
   }
 
@@ -180,5 +201,14 @@ export default class Etcd3Store extends Store {
 
     const maxAge = sess.cookie.maxAge
     return typeof maxAge === 'number' ? Math.floor(maxAge / 1000) : oneDay
+  }
+
+  /**
+   * Logging callback result
+   */
+  private callbackWithLog(cb: Function, err: any = null, value: any = null) {
+    const log = err ? ['ERR %s', err] : value ? ['DONE, data: %s', value] : ['DONE']
+    this.debug(log.shift(), ...log)
+    cb(err, value)
   }
 }
