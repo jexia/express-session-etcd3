@@ -27,8 +27,10 @@ describe('Etcd3Store test suit', () => {
   })
 
   it('should work with a default client instance', () => {
-    const subject = new Etcd3Store({ hosts: 'myhost' })
-    expect(subject['key']()).toBeTruthy()
+    const options = { hosts: 'myhost' }
+    const subject = new Etcd3Store(options)
+    expect(subject['client']).toBeTruthy()
+    expect(subject['client']['pool']['options']).toBe(options)
     tearDownTestClient(subject['client'])
   })
 
