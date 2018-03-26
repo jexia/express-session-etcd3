@@ -87,7 +87,7 @@ export default class Etcd3Store extends Store {
    */
   set = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
     const ttl = this.getTTL(session, sid)
-    this.debug('SET "%s" ttl:%s %O', sid, session, ttl)
+    this.debug('SET "%s" ttl:%s %O', sid, ttl, session)
     try {
       this.client
         .lease(ttl)
