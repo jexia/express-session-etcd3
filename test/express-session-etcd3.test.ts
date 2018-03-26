@@ -181,6 +181,14 @@ describe('Etcd3Store test suit', () => {
       subject.touch(sessionData.sid, sessionData, callback)
       expect(subject.set).toHaveBeenCalledWith(sessionData.sid, sessionData, callback)
     })
+
+    it('should not set it again if skipTouch is true at the adapter config', async () => {
+      const { subject, client } = await createSubject({ skipTouch: true })
+      jest.spyOn(subject, 'set').mockImplementation(jest.fn())
+      const callback = jest.fn()
+      subject.touch(sessionData.sid, sessionData, callback)
+      expect(subject.set).not.toHaveBeenCalled()
+    })
   })
 
   describe('when getting all the sessions', () => {

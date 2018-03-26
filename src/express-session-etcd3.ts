@@ -22,6 +22,7 @@ export interface Etcd3StoreOptions extends IOptions {
    * Defaults to `sess`.
    */
   prefix?: string
+  skipTouch?: boolean
 }
 
 /**
@@ -29,7 +30,8 @@ export interface Etcd3StoreOptions extends IOptions {
  */
 export const defaultOptions: Etcd3StoreOptions = Object.freeze({
   prefix: 'sess',
-  hosts: '127.0.0.1:2379'
+  hosts: '127.0.0.1:2379',
+  skipTouch: false
 })
 
 /**
@@ -109,6 +111,10 @@ export default class Etcd3Store extends Store {
    * potentially resetting the idle timer.
    */
   touch = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
+    if (this.config.skipTouch) {
+      this.debug('SKIP TOUCH "%s"', sid)
+      return
+    }
     this.debug('TOUCH "%s" %O', sid, session)
     this.set(sid, session, callback)
   }
