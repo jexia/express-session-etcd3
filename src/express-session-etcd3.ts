@@ -8,6 +8,11 @@ import debug from 'debug'
 export const oneDay = 86400
 
 /**
+ * Max TTL time to leasing on ETCD3 Client in seconds.
+ */
+export const maxTTL = 6442450
+
+/**
  * Configuration options for the etcd v3
  */
 export interface Etcd3StoreOptions extends IOptions {
@@ -193,6 +198,14 @@ export default class Etcd3Store extends Store {
    * Get the Time to Live (`ttl`) of the session
    */
   private getTTL(sess: Express.SessionData, sid: string): number {
+    const rawTTL = this.getRawTTL(sess, sid)
+    return rawTTL > maxTTL ? maxTTL : rawTTL
+  }
+
+  /**
+   * Get the raw Time to Live (`ttl`) of the session from the data sources
+   */
+  private getRawTTL(sess: Express.SessionData, sid: string): number {
     const storeTtl: any = (this as any)['ttl']
     if (typeof storeTtl === 'number') return storeTtl
     if (typeof storeTtl === 'string') return Number(storeTtl)

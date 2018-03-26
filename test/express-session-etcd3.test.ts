@@ -1,5 +1,10 @@
 import { DeleteBuilder, MultiRangeBuilder, SingleRangeBuilder } from 'etcd3/lib/src'
-import Etcd3Store, { Etcd3StoreOptions, defaultOptions, oneDay } from '../src/express-session-etcd3'
+import Etcd3Store, {
+  Etcd3StoreOptions,
+  defaultOptions,
+  oneDay,
+  maxTTL
+} from '../src/express-session-etcd3'
 import { Etcd3 } from 'etcd3'
 import { PutBuilder } from 'etcd3/lib/src/builder'
 import { anotherPrefix, createTestClientAndKeys, sessionData, tearDownTestClient } from './utils'
@@ -449,6 +454,15 @@ describe('Etcd3Store test suit', () => {
       const { subject } = await createSubject()
       const session = { ...sessionData, cookie: { ...sessionData.cookie, maxAge: 'what?' as any } }
       expect(subject['getTTL'](session, null)).toBe(oneDay)
+    })
+
+    it('should use max ttl value if the configured value is greater than it', async () => {
+      const { subject } = await createSubject()
+      const session = {
+        ...sessionData,
+        cookie: { ...sessionData.cookie, maxAge: maxTTL * 1000 * 2 }
+      }
+      expect(subject['getTTL'](session, null)).toBe(maxTTL)
     })
   })
 })
