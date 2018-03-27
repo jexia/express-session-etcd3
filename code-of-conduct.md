@@ -22,8 +22,7 @@ include:
 
 Examples of unacceptable behavior by participants include:
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
-advances
+* The use of sexualized language or imagery and unwelcome sexual attention or advances
 * Trolling, insulting/derogatory comments, and personal or political attacks
 * Public or private harassment
 * Publishing others' private information, such as a physical or electronic
@@ -54,16 +53,20 @@ further defined and clarified by project maintainers.
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at d.ru.fo.s+github@gmail.com. All
-complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. The project team is
-obligated to maintain confidentiality with regard to the reporter of an incident.
-Further details of specific enforcement policies may be posted separately.
+If you spot or experience unacceptable behaviour or if you have any questions
+about our code of conduct, please report this by sending an email to community@jexia.com.
+The Code of Conduct Team will review and investigate all reports issued.
+They will respond in a way they deem appropriate to the issue. They will handle every
+issue with confidentiality with regard to the reporter of an incident.
+Community members who do not follow or enforce the code of conduct may be expelled
+temporary or permanently as so decided by the Code of Conduct Team.
+We will protect victims of abuse as much as we can.
 
-Project maintainers who do not follow or enforce the Code of Conduct in good
-faith may face temporary or permanent repercussions as determined by other
-members of the project's leadership.
+In your report please add following: your contact information; names
+(real, nicknames, or pseudonyms) of any individuals involved.
+If there are additional witnesses, please include them as well.
+Your account of what occurred, and if you believe the incident is ongoing.
+Any additional information that may be helpful.
 
 ## Attribution
 

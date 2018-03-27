@@ -15,10 +15,17 @@
   "files": [
     "dist"
   ],
-  "author": "William Grasel <d.ru.fo.s+github@gmail.com>",
+  "author": "Jexia <community@jexia.com>",
+  "contributors": [
+    {
+      "name": "William Grasel",
+      "email": "d.ru.fo.s+github@gmail.com",
+      "url": "https://twitter.com/willgmbr"
+    }
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/willgm/express-session-etcd3.git"
+    "url": "git+https://github.com/jexia/express-session-etcd3.git"
   },
   "license": "MIT",
   "engines": {
