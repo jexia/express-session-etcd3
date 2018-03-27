@@ -25,7 +25,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jexia/express-session-etcd3.git"
+    "url": "https://github.com/jexia-com/express-session-etcd3.git"
   },
   "license": "MIT",
   "engines": {
@@ -115,7 +115,7 @@
     "rollup-plugin-node-resolve": "^3.0.3",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.11.1",
-    "semantic-release": "^15.0.1",
+    "semantic-release": "^15.1.4",
     "travis-deploy-once": "^4.3.4",
     "ts-jest": "^22.0.0",
     "ts-node": "^4.1.0",

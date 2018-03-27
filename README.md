@@ -1,7 +1,6 @@
 # express-session-etcd3
 
-[![Build Status](https://travis-ci.org/willgm/express-session-etcd3.svg?branch=master)](https://travis-ci.org/willgm/express-session-etcd3)
-[![Coverage Status](https://coveralls.io/repos/github/willgm/express-session-etcd3/badge.svg?branch=master)](https://coveralls.io/github/willgm/express-session-etcd3?branch=master)
+[![Build Status](https://travis-ci.org/jexia-com/express-session-etcd3.svg?branch=master)](https://travis-ci.org/jexia-com/express-session-etcd3)
 
 An ETCD v3 store adapter for [express-session](https://github.com/expressjs/session) using [etcd3](https://github.com/mixer/etcd3) client.
 
@@ -28,17 +27,17 @@ app.use(session({
 
 ### Options
 
-You can find all the [available options](https://willgm.github.io/express-session-etcd3/interfaces/etcd3storeoptions.html) at the documentation.
+You can find all the [available options](https://jexia-com.github.io/express-session-etcd3/interfaces/etcd3storeoptions.html) at the documentation.
 
 ## Documentation
 
-Our [TypeDoc docs are available here](https://willgm.github.io/express-session-etcd3/).
+Our [TypeDoc docs are available here](https://jexia-com.github.io/express-session-etcd3/).
 
-Our [test cases](https://github.com/willgm/express-session-etcd3/tree/master/test) are also quite readable.
+Our [test cases](https://github.com/jexia-com/express-session-etcd3/tree/master/test) are also quite readable.
 
 ## Contributing
 
-You can find all the steps at the [Contributing Guide](https://github.com/willgm/express-session-etcd3/blob/master/CONTRIBUTING.md).
+You can find all the steps at the [Contributing Guide](https://github.com/jexia-com/express-session-etcd3/blob/master/CONTRIBUTING.md).
 
 ## Credits
 
@@ -46,4 +45,4 @@ This project was easily bootstrapped with [TypeScript library starter](https://g
 
 ## License
 
-[MIT](https://github.com/willgm/express-session-etcd3/blob/master/LICENSE)
+[MIT](https://github.com/jexia-com/express-session-etcd3/blob/master/LICENSE)

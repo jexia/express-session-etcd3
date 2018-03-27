@@ -1,0 +1,49 @@
+version: 2
+jobs:
+  test:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Run ETCD v3
+          command: npm run docker
+      - run:
+          name: Set NodeJS to v8.9.0
+          command: |
+            set +e
+            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install v8.9.0
+            nvm alias default v8.9.0
+            echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+            echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
+            node -v
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test:prod
+      - run: npm run build
+  deploy:
+    docker:
+      - image: circleci/node:8.9.0
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+      - run: npm run deploy-docs
+      - run: npm run semantic-release
+
+workflows:
+  version: 2
+  pullrequest:
+    jobs:
+      - test
+  publish:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
