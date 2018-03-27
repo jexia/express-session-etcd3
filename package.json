@@ -38,7 +38,7 @@
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:prod": "npm run lint && npm run test -- --coverage --no-cache --ci --forceExit",
+    "test:ci": "npm run test -- --coverage --no-cache --ci --forceExit --testResultsProcessor=\"jest-junit\"",
     "deploy-docs": "ts-node tools/gh-pages-publish",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
@@ -46,7 +46,7 @@
     "precommit": "lint-staged",
     "docker": "docker build -t etcd . && docker run -d -p 2379:2379 -p 2380:2380 etcd",
     "travis-deploy-once": "travis-deploy-once",
-    "prepush": "npm run test:prod && npm run build",
+    "prepush": "npm run test:ci && npm run build",
     "commitmsg": "validate-commit-msg"
   },
   "lint-staged": {
@@ -104,6 +104,7 @@
     "express-session": "^1.15.6",
     "husky": "^0.14.0",
     "jest": "^22.0.2",
+    "jest-junit": "^3.6.0",
     "lint-staged": "^7.0.0",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^1.4.4",
