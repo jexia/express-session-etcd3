@@ -1,6 +1,6 @@
 # express-session-etcd3
 
-[![Build Status](https://travis-ci.org/jexia-com/express-session-etcd3.svg?branch=master)](https://travis-ci.org/jexia-com/express-session-etcd3)
+[![CircleCI](https://circleci.com/gh/jexia-com/express-session-etcd3.svg?style=svg)](https://circleci.com/gh/jexia-com/express-session-etcd3)
 
 An ETCD v3 store adapter for [express-session](https://github.com/expressjs/session) using [etcd3](https://github.com/mixer/etcd3) client.
 
