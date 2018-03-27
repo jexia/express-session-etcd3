@@ -35,10 +35,7 @@ jobs:
 
 workflows:
   version: 2
-  pullrequest:
-    jobs:
-      - test
-  publish:
+  test-n-deploy:
     jobs:
       - test
       - deploy:
