@@ -17,11 +17,17 @@ export const maxTTL = 6442450
  */
 export interface Etcd3StoreOptions extends IOptions {
   /**
-   * Prefix used to record the keys of all the sessions
+   * Prefix used to record the keys of all the sessions.
    *
    * Defaults to `sess`.
    */
   prefix?: string
+  /**
+   * Option to skip touching process that express does every time it reads the session.
+   * This is useful if you work with big TTL and wanna free your ETCD from this extra access.
+   *
+   * Defaults to `false`.
+   */
   skipTouch?: boolean
 }
 
