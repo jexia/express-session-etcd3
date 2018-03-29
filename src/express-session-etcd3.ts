@@ -119,6 +119,7 @@ export default class Etcd3Store extends Store {
   touch = (sid: string, session: Express.SessionData, callback: (err: any) => void): void => {
     if (this.config.skipTouch) {
       this.debug('SKIP TOUCH "%s"', sid)
+      callback(null)
       return
     }
     this.debug('TOUCH "%s" %O', sid, session)
