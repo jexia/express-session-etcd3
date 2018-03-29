@@ -1,7 +1,7 @@
 {
   "name": "express-session-etcd3",
   "version": "0.0.0-development",
-  "description": "",
+  "description": "An ETCD v3 store adapter for express-session using etcd3 client.",
   "keywords": [
     "etcd",
     "etcd3",
