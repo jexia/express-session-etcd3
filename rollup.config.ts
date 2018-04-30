@@ -11,10 +11,19 @@ const libraryName = 'express-session-etcd3'
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'cjs' },
-    { file: pkg.module, format: 'es' },
+    {
+      file: pkg.main,
+      sourcemap: true,
+      exports: 'named',
+      name: camelCase(libraryName), format: 'cjs'
+    },
+    {
+      file: pkg.module,
+      sourcemap: true,
+      exports: 'named',
+      format: 'es'
+    },
   ],
-  sourcemap: true,
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
     'express-session',
