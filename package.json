@@ -86,7 +86,7 @@
   },
   "peerDependencies": {
     "express-session": "^1.15.6",
-    "etcd3": "^0.2.9"
+    "etcd3": "^0.2.10"
   },
   "devDependencies": {
     "@types/debug": "0.0.30",
@@ -97,7 +97,7 @@
     "commitizen": "^2.9.6",
     "cross-env": "^5.1.4",
     "cz-conventional-changelog": "^2.1.0",
-    "etcd3": "^0.2.9",
+    "etcd3": "^0.2.10",
     "express-session": "^1.15.6",
     "husky": "^0.14.3",
     "jest": "^22.4.3",
