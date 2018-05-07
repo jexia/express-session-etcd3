@@ -12,6 +12,7 @@ import { anotherPrefix, createTestClientAndKeys, sessionData, tearDownTestClient
 describe('Etcd3Store test suit', () => {
   let client: Etcd3
   const newSid = 'newTestSid'
+  const ETCD_CLEAR_TIME = 1500
 
   async function createSubject(
     options: Partial<Etcd3StoreOptions> = undefined,
@@ -133,21 +134,36 @@ describe('Etcd3Store test suit', () => {
       })
     })
 
-    it('should lease the session with the giving ttl', async done => {
-      const { subject } = await createSubject({ prefix: anotherPrefix })
+    it('should automatically delete the session using ETCD lease with the giving ttl', async done => {
+      const { subject } = await createSubject()
       const ttl = 1
       jest.spyOn(subject, 'getTTL' as any).mockReturnValue(ttl)
-      jest.spyOn(client, 'lease')
       subject.set(newSid, sessionData, err => {
         expect(err).toBeNull()
-        expect(client.lease).toHaveBeenCalledWith(ttl)
-        client
-          .get(anotherPrefix + '/' + newSid)
-          .exec()
-          .then(data => {
-            expect(data.kvs[0]).toBeTruthy()
+        setTimeout(() => {
+          client.get(defaultOptions.prefix + '/' + newSid).then(data => {
+            expect(data).toBeNull()
             done()
           })
+        }, ttl * 1000 + ETCD_CLEAR_TIME)
+      })
+    })
+
+    it('should not delete the session before the ttl', async done => {
+      const { subject } = await createSubject()
+      const ttl = 1
+      jest.spyOn(subject, 'getTTL' as any).mockReturnValue(ttl)
+      subject.set(newSid, sessionData, err => {
+        expect(err).toBeNull()
+        setTimeout(() => {
+          client
+            .get(defaultOptions.prefix + '/' + newSid)
+            .json()
+            .then(data => {
+              expect(data).toEqual(sessionData)
+              done()
+            })
+        }, ttl * 900)
       })
     })
 
@@ -189,6 +205,49 @@ describe('Etcd3Store test suit', () => {
       subject.touch(sessionData.sid, sessionData, callback)
       expect(subject.set).not.toHaveBeenCalled()
       expect(callback).toBeCalledWith(null)
+    })
+
+    it('should keep the session alive even after the first leasing cycle', async done => {
+      const { subject } = await createSubject()
+      const ttl = 1
+      jest.spyOn(subject, 'getTTL' as any).mockReturnValue(ttl)
+      subject.set(newSid, sessionData, err => {
+        expect(err).toBeNull()
+        setTimeout(() => {
+          subject.touch(newSid, sessionData, () => {
+            /**/
+          })
+        }, ttl * 900)
+        setTimeout(() => {
+          client
+            .get(defaultOptions.prefix + '/' + newSid)
+            .json()
+            .then(data => {
+              expect(data).toEqual(sessionData)
+              done()
+            })
+        }, ttl * 1000 + ETCD_CLEAR_TIME)
+      })
+    })
+
+    it('should not prevent the leasing cycle if skipTouch is true at the adapter config', async done => {
+      const { subject } = await createSubject({ skipTouch: true })
+      const ttl = 1
+      jest.spyOn(subject, 'getTTL' as any).mockReturnValue(ttl)
+      subject.set(newSid, sessionData, err => {
+        expect(err).toBeNull()
+        setTimeout(() => {
+          subject.touch(newSid, sessionData, () => {
+            /**/
+          })
+        }, ttl * 900)
+        setTimeout(() => {
+          client.get(defaultOptions.prefix + '/' + newSid).then(data => {
+            expect(data).toBeNull()
+            done()
+          })
+        }, ttl * 1000 + ETCD_CLEAR_TIME)
+      })
     })
   })
 

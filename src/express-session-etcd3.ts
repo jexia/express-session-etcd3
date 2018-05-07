@@ -97,11 +97,17 @@ export default class Etcd3Store extends Store {
     const ttl = this.getTTL(session, sid)
     this.debug('SET "%s" ttl:%s %O', sid, ttl, session)
     try {
-      this.client
-        .lease(ttl)
+      const leasing = this.client.lease(ttl)
+      leasing
         .put(this.key(sid))
         .value(JSON.stringify(session))
-        .then(() => this.callbackWithLog(callback), err => this.callbackWithLog(callback, err))
+        .then(
+          () => {
+            leasing.release()
+            this.callbackWithLog(callback)
+          },
+          err => this.callbackWithLog(callback, err)
+        )
     } catch (err) {
       callback(err)
     }
